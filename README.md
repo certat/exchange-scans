@@ -86,3 +86,9 @@ Example results for patched servers:
 "198.51.100.183","2021-09-01T00:00:00+00:00","15.1.2308.14","Exchange Server 2016 CU21 Jul21SU"
 "198.51.100.136","2021-09-01T00:00:00+00:00","15.0.1497.23","Exchange Server 2013 CU23 Jul21SU"
 ```
+
+## Funding
+
+This project is partially funded by the CEF framework
+
+![Co-financed by the Connecting Europe Facility of the European Union](https://ec.europa.eu/inea/sites/default/files/ceflogos/en_horizontal_cef_logo_2.png)
