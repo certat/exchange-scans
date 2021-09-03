@@ -11,6 +11,10 @@ provides scripts to scan for
   The pre-auth path confusion which is the entry point for the
   [ProxyShell](https://www.zerodayinitiative.com/blog/2021/8/17/from-pwn2own-2021-a-new-attack-surface-on-microsoft-exchange-proxyshell)
   exploit chain.
+- [CVE-2021-33766](https://msrc.microsoft.com/update-guide/en-US/vulnerability/CVE-2021-33766):
+  The [ProxyToken](https://www.thezdi.com/blog/2021/8/30/proxytoken-an-authentication-bypass-in-microsoft-exchange-server)
+  vulnerability which enables an unauthenticated attacker to perform
+  configuration actions on mailboxes belonging to arbitrary users.
 
 ## CVE-2021-26855
 
