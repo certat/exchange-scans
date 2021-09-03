@@ -199,3 +199,91 @@ def is_vulnerable_to_cve_2021_34473(host, timeout=5, method='GET',
     else:
         return (None, version)
 # end is_vulnerable_to_cve_2021_34473
+
+def is_vulnerable_to_cve_2021_33766(host, timeout=5, method='POST',
+                  scheme='https://', path='/ecp/postmaster@{}/RulesEditor/InboxRules.svc/NewObject',
+                  debug=False):
+    '''is_vulnerable_to_cve_2021_33766: Checks if an Exchange
+          installation is vulnerable to CVE-2021-33766. For a detailed
+          description of the vulnerability see
+          https://www.zerodayinitiative.com/blog/2021/8/30/proxytoken-an-authentication-bypass-in-microsoft-exchange-server
+          Currently, this only tries to check the version number
+          to check for the vulnerability.
+        Arguments:
+          host (str)    : The host to check. Can be an IP address or
+                        a hostname.
+          timeout (int) : The timeout for the request in seconds.
+                          Default: 5
+          method (str)  : The HTTP method to use. Default: "POST"
+          scheme (str)  : The scheme to use. Default: "https://"
+          path (str)    : The path on the server to access. This
+                          argument is currently not used.
+          debug (bool)  : If True, print debugging output do stderr.
+        Return values:
+          (status, version) (tuple): "status" is a bool if it could
+                        be determined whether the host is vulnerable
+                        or not. Otherwise it is "None". "version"
+                        is the value returned from get_exchange_version
+                        or "None" if the request to the host failed.
+    '''
+    if debug:
+        this = is_vulnerable_to_cve_2021_33766
+    header = {
+      'User-Agent'  : 'Check for CVE-2021-33766',
+      'Cookie'      : 'SecurityToken=x',
+    }
+    if debug:
+        print('Trying to determine version...', file=sys.stderr)
+    version = get_exchange_version(host, timeout, scheme, debug=debug)
+    if debug:
+        print(f'Version found: "{version}"')
+    if version:
+        parts = version.split('.')
+        major = int(parts[0])
+        minor = int(parts[1])
+        cu = int(parts[2])
+        try: 
+            su = int(parts[3])
+        except IndexError:
+            su = None
+        if major == 15 and minor == 2: # Exchange 2019
+            if cu <= 792: # CU8 and below are vulnerable
+                return (True, version) 
+            elif cu > 922: #CU11 and later -- not released at time of writing (2021-09-03)
+                return (False, version)
+            elif su:
+                if cu == 922: # CU10
+                    if su >= 13: # SU from July 2021 or later
+                        return (False, version)
+                    else:
+                        return (True, version)
+                elif cu == 858 and su >= 15: # CU9
+                    if su >= 15: # SU from July 2021 or later
+                        return (False, version)
+                    else:
+                        return (True, version)
+        elif major == 15 and minor == 1: # Exchange 2016
+            if cu > 2308: # CU22 and later -- not released at time of writing (2021-09-03)
+                return (False, version)
+            elif cu < 2242: # CU 19 and below are vulnerable
+                return (True, version)
+            elif su:
+                if cu == 2242: # CU20
+                    if su >= 12: # SU from July 2021 or later
+                        return (False, version)
+                    else:
+                        return (True, version)
+        elif major == 15 and minor == 0: # Exchange 2013
+            if cu < 1497: # CU22 and below are vulnerable
+                return (True, version)
+            elif su:
+                if cu == 1497: # CU23
+                    if su >= 23: # SU from July 2021 or later
+                        return (False, version)
+                    else:
+                        return (True, version)
+        else:
+            return (None, version)
+    else:
+        return (None, None)
+# end is_vulnerable_to_cve_2021_33766

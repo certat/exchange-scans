@@ -37,6 +37,15 @@ the Exchange server in two ways:
   HTML. This was inpired by the `get_exchange_version` function in
   https://github.com/cert-lv/CVE-2020-0688/blob/master/lib.py
 
+## CVE-2021-33677
+
+Checking for CVE-2021-33677 a.k.a. [ProxyToken](https://www.thezdi.com/blog/2021/8/30/proxytoken-an-authentication-bypass-in-microsoft-exchange-server)
+is currently very rudimentary: It actually just tries to determine
+the version of the Microsoft Exchange server. As ProxyToken was fixed
+in the July 2021 Security Updates, any Exchange servers running Exchange
+2013, 2016, or 2019 with a patch level prior to that are considered
+vulnerable.
+
 ## Usage example
 
 The main script to run is `scan.py`:
@@ -44,10 +53,10 @@ The main script to run is `scan.py`:
 $ python3 scan.py --help
 usage: scan.py [-h] [--method METHOD] [--timeout TIMEOUT] [--scheme {https://,http://}] [--path PATH] [--threads THREADS] [--patched PATCHED]
                [--unknown UNKNOWN] [--debug]
-               {cve-2021-26855,cve-2021-34473} hostlist results
+               {cve-2021-26855,cve-2021-34473,cve-2021-33766} hostlist results
 
 positional arguments:
-  {cve-2021-26855,cve-2021-34473}
+  {cve-2021-26855,cve-2021-34473,cve-2021-33766}
                         The CVE number to scan for.
   hostlist              List of IPs/hostnames to scan. One IP/hostname per line
   results               CSV file to write vulnerable hosts to. Format: "ip","timestamp","exchange_version_number",exchange_version_name"

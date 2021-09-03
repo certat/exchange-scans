@@ -13,7 +13,8 @@ import sys
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('cve', type=str.lower, choices = 
-                        ['cve-2021-26855', 'cve-2021-34473'], 
+                        ['cve-2021-26855', 'cve-2021-34473',
+                        'cve--2021-33766'], 
                         help='The CVE number to scan for.')
     parser.add_argument('hostlist', type=argparse.FileType('r'),
                         help='List of IPs/hostnames to scan. One'
@@ -66,6 +67,8 @@ def main():
         is_vulnerable = exchange_lib.is_vulnerable_to_cve_2021_26855
     elif args.cve == 'cve-2021-34473':
         is_vulnerable = exchange_lib.is_vulnerable_to_cve_2021_34473
+    elif args.cve == 'cve-2021-33766':
+        is_vulnerable = exchange_lib.is_vulnerable_to_cve_2021_33766
     with concurrent.futures.ThreadPoolExecutor(max_workers=args.threads) as executor:
         future_to_host = {executor.submit(is_vulnerable, host, args.timeout,
                                         args.method,scheme=args.scheme,
